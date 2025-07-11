@@ -33,6 +33,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'accounts.middleware.LoginRequiredMiddleware'
 ]
 
 ROOT_URLCONF = 'smartservice.urls'
@@ -40,7 +41,13 @@ ROOT_URLCONF = 'smartservice.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [
+            BASE_DIR / 'templates',                 
+            BASE_DIR / 'templates/accounts', 
+            BASE_DIR / 'templates/admin',      
+            BASE_DIR / 'templates/users',
+            BASE_DIR / 'templates/provider',
+        ],  
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
