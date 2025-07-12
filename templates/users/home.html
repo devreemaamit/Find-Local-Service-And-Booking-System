@@ -1,18 +1,59 @@
 {% extends 'base.html' %}
 {% block title %}User Dashboard{% endblock %}
-{% block content %}
-<h2>👤 Welcome, {{ user.username }}!</h2>
-<p>This is your user dashboard.</p>
 
-<div class="row">
-  <div class="col-md-4">
-    <div class="card shadow">
-      <div class="card-body">
-        <h5 class="card-title">Book a Service</h5>
-        <p class="card-text">Browse and request services from local providers.</p>
-        <a href="#" class="btn btn-primary">Browse Services</a>
+{% block content %}
+<div class="container mt-5">
+  <div class="text-center mb-5">
+    <h2 class="fw-bold text-primary">👤 User Dashboard</h2>
+    <p class="text-muted">Welcome, {{ user.username|title }}!</p>
+  </div>
+
+  <div class="row g-4 justify-content-center">
+
+    <!-- Book Service -->
+    <div class="col-sm-6 col-md-4 col-lg-3">
+      <div class="card h-100 shadow-sm border-0">
+        <div class="card-body text-center">
+          <div class="mb-3">
+            <i class="bi bi-bag-plus-fill text-success fs-1"></i>
+          </div>
+          <h5 class="card-title">Book a Service</h5>
+          <p class="card-text text-muted small">Find and request services from providers near you.</p>
+          <a href="#" class="btn btn-outline-success btn-sm w-100">Browse Services</a>
+        </div>
       </div>
     </div>
+
+    <!-- My Bookings -->
+    <div class="col-sm-6 col-md-4 col-lg-3">
+      <div class="card h-100 shadow-sm border-0">
+        <div class="card-body text-center">
+          <div class="mb-3">
+            <i class="bi bi-calendar-check-fill text-info fs-1"></i>
+          </div>
+          <h5 class="card-title">My Bookings</h5>
+          <p class="card-text text-muted small">Check the status of your service bookings.</p>
+          <a href="{% url 'view_bookings' %}" class="btn btn-outline-info btn-sm w-100 rounded-pill">
+            View Bookings
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Profile Settings -->
+    <div class="col-sm-6 col-md-4 col-lg-3">
+      <div class="card h-100 shadow-sm border-0">
+        <div class="card-body text-center">
+          <div class="mb-3">
+            <i class="bi bi-person-gear text-warning fs-1"></i>
+          </div>
+          <h5 class="card-title">Profile</h5>
+          <p class="card-text text-muted small">Edit your account and personal information.</p>
+          <a href="#" class="btn btn-outline-warning btn-sm w-100">Update Profile</a>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 {% endblock %}

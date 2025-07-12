@@ -59,7 +59,7 @@ def user_home(request):
 def provider_home(request):
     if request.user.role != 'provider':
         return redirect('login')
-    return render(request, 'provider/home.html')
+    return render(request, 'services/home.html')
 
 @login_required
 def dashboard_redirect(request):

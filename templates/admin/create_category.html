@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8 col-md-10">
+      <div class="card border-0 shadow rounded-4 p-4">
+        <h2 class="text-center mb-4 text-primary fw-bold">
+          {% if is_edit %}✏ Edit Service Category{% else %}🛠 Add Service Category{% endif %}
+        </h2>
+
+        <form id="categoryForm" method="post" class="needs-validation" novalidate>
+          {% csrf_token %}
+
+          <!-- Category Name -->
+          <div class="form-floating mb-3">
+            <input type="text" class="form-control" id="name" name="name" placeholder="Category Name" required
+                   value="{{ category.name|default:'' }}">
+            <label for="name">Category Name <span class="text-danger">*</span></label>
+            <div class="invalid-feedback">Category name is required.</div>
+          </div>
+
+          <!-- Description -->
+          <div class="form-floating mb-4">
+            <textarea class="form-control" placeholder="Description" id="description" name="description" style="height: 120px">{{ category.description|default:'' }}</textarea>
+            <label for="description">Description</label>
+          </div>
+
+          <!-- Actions -->
+          <div class="d-grid gap-3">
+            <button type="submit" class="btn btn-primary btn-lg rounded-pill shadow-sm">
+              {% if is_edit %}💾 Update Category{% else %}➕ Add Category{% endif %}
+            </button>
+            <a href="{% url 'list_categories' %}" class="btn btn-outline-secondary rounded-pill">⬅ Back to List</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Fancy Confirmation Modal -->
+<div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content shadow-lg rounded-3 border-0">
+      <div class="modal-header bg-warning text-dark border-0">
+        <h5 class="modal-title" id="confirmModalLabel">⚠ Confirmation</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center">
+        <p id="confirmMessage" class="fs-5 fw-medium">Are you sure?</p>
+      </div>
+      <div class="modal-footer border-0 d-flex justify-content-center gap-3">
+        <button type="button" class="btn btn-outline-secondary px-4" data-bs-dismiss="modal">❌ Cancel</button>
+        <button type="button" class="btn btn-success px-4" id="confirmBtn">✅ Yes, Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Script for validation + modal -->
+<script>
+(() => {
+  'use strict';
+
+  const form = document.getElementById('categoryForm');
+  const confirmBtn = document.getElementById('confirmBtn');
+  const confirmModal = new bootstrap.Modal(document.getElementById('confirmModal'));
+  const confirmMessage = document.getElementById('confirmMessage');
+  const isEdit = "{{ is_edit|yesno:'true,false' }}" === "true";
+
+  form.addEventListener('submit', function (event) {
+    if (!form.checkValidity()) {
+      event.preventDefault();
+      event.stopPropagation();
+      form.classList.add('was-validated');
+    } else {
+      event.preventDefault(); // Prevent default submit
+      confirmMessage.innerText = isEdit
+        ? "Are you sure you want to update this category?"
+        : "Are you sure you want to add this new category?";
+      confirmModal.show();
+    }
+  });
+
+  confirmBtn.addEventListener('click', () => {
+    confirmModal.hide();
+    form.submit(); // Final form submit
+  });
+})();
+</script>
+{% endblock %}

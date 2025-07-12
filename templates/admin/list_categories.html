@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+
+  <!-- Title & Add Button -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0">📂 Service Categories</h2>
+    <a href="{% url 'create_category' %}" class="btn btn-success rounded-pill shadow-sm">
+      ➕ Add Category
+    </a>
+  </div>
+
+  <!-- Table -->
+  <div class="table-responsive shadow-sm">
+    <table class="table table-bordered table-hover align-middle mb-0">
+      <thead class="table-primary">
+        <tr class="text-center">
+          <th style="width: 5%;">#</th>
+          <th style="width: 25%;">Category Name</th>
+          <th>Description</th>
+          <th style="width: 20%;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for cat in categories %}
+        <tr>
+          <td class="text-center">{{ forloop.counter }}</td>
+          <td>{{ cat.name }}</td>
+          <td>{{ cat.description }}</td>
+          <td class="text-center">
+            <div class="d-flex justify-content-center gap-2">
+              <a href="{% url 'edit_category' cat.id %}" class="btn btn-outline-warning btn-sm rounded-pill px-3">
+                ✏ Edit
+              </a>
+              <button class="btn btn-outline-danger btn-sm rounded-pill px-3" data-bs-toggle="modal" data-bs-target="#deleteModal{{ cat.id }}">
+                🗑 Delete
+              </button>
+            </div>
+          </td>
+        </tr>
+
+        <!-- Delete Confirmation Modal -->
+        <div class="modal fade" id="deleteModal{{ cat.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ cat.id }}" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content shadow border-0 rounded-3">
+              <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="deleteModalLabel{{ cat.id }}">⚠ Confirm Deletion</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body text-center">
+                <p class="mb-0">Are you sure you want to delete the category<br><strong class="text-danger">{{ cat.name }}</strong>?</p>
+              </div>
+              <div class="modal-footer justify-content-center">
+                <a href="{% url 'delete_category' cat.id %}" class="btn btn-danger px-4">🗑 Yes, Delete</a>
+                <button type="button" class="btn btn-outline-secondary px-4" data-bs-dismiss="modal">❌ Cancel</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% empty %}
+        <tr>
+          <td colspan="4" class="text-center text-muted py-4">No categories found.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

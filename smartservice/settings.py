@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'accounts',
+    'services',
 ]
 
 MIDDLEWARE = [
@@ -56,7 +57,8 @@ TEMPLATES = [
             BASE_DIR / 'templates/accounts',
             BASE_DIR / 'templates/admin',
             BASE_DIR / 'templates/users',
-            BASE_DIR / 'templates/provider',
+            BASE_DIR / 'templates/services',
+            BASE_DIR / 'templates/bookings',
         ],
         'APP_DIRS': True,
         'OPTIONS': {

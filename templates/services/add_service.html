@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow-sm border-0 rounded-4 p-4">
+        <h2 class="text-center mb-4 text-primary">
+          ➕ Add New Service
+        </h2>
+
+        <form id="addServiceForm" method="post" class="needs-validation" novalidate>
+          {% csrf_token %}
+
+          <!-- Service Name -->
+          <div class="mb-3">
+            <label for="serviceName" class="form-label">Service Name <span class="text-danger">*</span></label>
+            <input type="text" class="form-control rounded-3" id="serviceName" name="service_name" required>
+            <div class="invalid-feedback">Please enter the service name.</div>
+          </div>
+
+          <!-- Category Dropdown -->
+          <div class="mb-3">
+            <label for="category" class="form-label">Select Category <span class="text-danger">*</span></label>
+            <select class="form-select rounded-3" id="category" name="category" required>
+              <option value="" disabled selected>-- Select a category --</option>
+              {% for cat in categories %}
+              <option value="{{ cat.id }}">{{ cat.name }}</option>
+              {% endfor %}
+            </select>
+            <div class="invalid-feedback">Please select a category.</div>
+          </div>
+
+          <!-- Price -->
+          <div class="mb-3">
+            <label for="price" class="form-label">Price (₹) <span class="text-danger">*</span></label>
+            <input type="number" class="form-control rounded-3" id="price" name="price" step="0.01" required>
+            <div class="invalid-feedback">Please enter a valid price.</div>
+          </div>
+
+          <!-- Description -->
+          <div class="mb-4">
+            <label for="description" class="form-label">Description (optional)</label>
+            <textarea class="form-control rounded-3" id="description" name="description" rows="3" placeholder="Short description..."></textarea>
+          </div>
+
+          <!-- Buttons -->
+          <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-primary rounded-pill">
+              💾 Save Service
+            </button>
+            <a href="{% url 'provider_home' %}" class="btn btn-outline-secondary rounded-pill">⬅ Back to Dashboard</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ✅ Confirmation Modal -->
+<div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow-sm">
+      <div class="modal-header bg-info text-white">
+        <h5 class="modal-title" id="confirmModalLabel">Confirm Submission</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to save this service?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">❌ Cancel</button>
+        <button type="button" class="btn btn-primary" id="confirmSubmitBtn">✅ Yes, Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  'use strict'
+
+  const form = document.getElementById('addServiceForm');
+  const confirmModal = new bootstrap.Modal(document.getElementById('confirmModal'));
+  const confirmBtn = document.getElementById('confirmSubmitBtn');
+
+  form.addEventListener('submit', function (e) {
+    if (!form.checkValidity()) {
+      e.preventDefault();
+      e.stopPropagation();
+    } else {
+      e.preventDefault(); // Prevent normal submission
+      confirmModal.show(); // Show confirmation
+    }
+    form.classList.add('was-validated');
+  });
+
+  confirmBtn.addEventListener('click', () => {
+    confirmModal.hide();
+    form.submit(); // Submit programmatically after confirmation
+  });
+})();
+</script>
+
+{% endblock %}
