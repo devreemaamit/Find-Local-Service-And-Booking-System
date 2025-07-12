@@ -2,17 +2,13 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 
-
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Load ENV_MODE from main .env
-load_dotenv(BASE_DIR / '.env')  # loads ENV_MODE
+# Load main .env
+load_dotenv(BASE_DIR / '.env')
 env_mode = os.getenv('ENV_MODE', 'dev')
 
-# Load specific env file (e.g., .env.dev or .env.prod)
-load_dotenv(BASE_DIR / f'.env.{env_mode}', override=True)
-
-# Load ENV_MODE only if not on Render
+# Load specific .env.dev or .env.prod file only locally
 if os.getenv('RENDER') != 'true':
     load_dotenv(BASE_DIR / f'.env.{env_mode}', override=True)
 
@@ -24,7 +20,6 @@ ALLOWED_HOSTS = [
     'localhost',
     'find-local-service-and-booking-system.onrender.com'
 ]
-
 
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
@@ -48,7 +43,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'accounts.middleware.LoginRequiredMiddleware'
+    'accounts.middleware.LoginRequiredMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # Required for static files
 ]
 
 ROOT_URLCONF = 'smartservice.urls'
@@ -57,12 +53,12 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            BASE_DIR / 'templates',                 
-            BASE_DIR / 'templates/accounts', 
-            BASE_DIR / 'templates/admin',      
+            BASE_DIR / 'templates',
+            BASE_DIR / 'templates/accounts',
+            BASE_DIR / 'templates/admin',
             BASE_DIR / 'templates/users',
             BASE_DIR / 'templates/provider',
-        ],  
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -77,15 +73,13 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'smartservice.wsgi.application'
 
-# Conditional DB settings
-# Select engine dynamically from .env
-db_engine = os.getenv("DB_ENGINE", "postgresql" if os.getenv("RENDER") == "true" else "mysql")
-
-if db_engine == "postgresql":
-    db_backend = 'django.db.backends.postgresql'
+# ✅ FIXED: Choose DB based on environment
+if os.getenv("RENDER") == "true":
+    db_engine = "postgresql"
 else:
-    db_backend = 'django.db.backends.mysql'
+    db_engine = os.getenv("DB_ENGINE", "mysql")
 
+# ✅ Database config
 if db_engine == "mysql":
     DATABASES = {
         'default': {
@@ -128,6 +122,11 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
+STATIC_ROOT = BASE_DIR / 'staticfiles'  # Required for collectstatic on Render
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'accounts.CustomUser'
+
+# Debug info (optional)
+print("Running on Render:", os.getenv('RENDER'))
+print("Using DB Engine:", db_engine)
