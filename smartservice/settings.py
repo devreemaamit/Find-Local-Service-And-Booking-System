@@ -12,8 +12,9 @@ env_mode = os.getenv('ENV_MODE', 'dev')
 # Load specific env file (e.g., .env.dev or .env.prod)
 load_dotenv(BASE_DIR / f'.env.{env_mode}', override=True)
 
+# Load ENV_MODE only if not on Render
 if os.getenv('RENDER') != 'true':
-    load_dotenv(BASE_DIR / '.env')
+    load_dotenv(BASE_DIR / f'.env.{env_mode}', override=True)
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = os.getenv("DEBUG", "True") == "True"
@@ -78,7 +79,7 @@ WSGI_APPLICATION = 'smartservice.wsgi.application'
 
 # Conditional DB settings
 # Select engine dynamically from .env
-db_engine = os.getenv("DB_ENGINE", "mysql")
+db_engine = os.getenv("DB_ENGINE", "postgresql" if os.getenv("RENDER") == "true" else "mysql")
 
 if db_engine == "postgresql":
     db_backend = 'django.db.backends.postgresql'
