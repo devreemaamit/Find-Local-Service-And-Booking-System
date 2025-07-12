@@ -25,7 +25,8 @@
         <!-- Full Name -->
         <div class="mb-3">
           <label class="form-label">Full Name</label>
-          <input type="text" class="form-control" name="full_name" id="full_name" value="{{ request.POST.full_name }}">
+          <input type="text" class="form-control" name="full_name" id="full_name" placeholder="Enter your full name"
+            value="{{ request.POST.full_name }}">
           <div class="text-danger error-msg" id="full_name_error" style="display: none;">Full name is required</div>
           {% if form.errors.full_name %}
           <div class="text-danger">{{ form.errors.full_name.0 }}</div>
@@ -34,20 +35,22 @@
 
         <!-- Email -->
         <div class="mb-3">
-        <label class="form-label">Email Address</label>
-        <input type="email" class="form-control" name="email" id="email" value="{{ request.POST.email }}">
-        <div class="text-danger error-msg" id="email_required" style="display: none;">Email is required</div>
-        <div class="text-danger error-msg" id="email_invalid" style="display: none;">Enter a valid email</div>
-        {% if form.errors.email %}
+          <label class="form-label">Email Address</label>
+          <input type="email" class="form-control" name="email" id="email" placeholder="e.g. yourname@example.com"
+            value="{{ request.POST.email }}">
+          <div class="text-danger error-msg" id="email_required" style="display: none;">Email is required</div>
+          <div class="text-danger error-msg" id="email_invalid" style="display: none;">Enter a valid email</div>
+          {% if form.errors.email %}
           <div class="text-danger">{{ form.errors.email.0 }}</div>
-        {% endif %}
-      </div>
+          {% endif %}
+        </div>
 
 
         <!-- Username -->
         <div class="mb-3">
           <label class="form-label">Username</label>
-          <input type="text" class="form-control" name="username" id="username" value="{{ request.POST.username }}">
+          <input type="text" class="form-control" name="username" id="username" placeholder="Choose a username"
+            value="{{ request.POST.username }}">
           <div class="text-danger error-msg" id="username_error" style="display: none;">Username is required</div>
           {% if form.errors.username %}
           <div class="text-danger">{{ form.errors.username.0 }}</div>
@@ -71,8 +74,9 @@
         <!-- Password -->
         <div class="mb-3">
           <label class="form-label">Password</label>
-          <input type="password" class="form-control" name="password1" id="password1">
-          <div class="text-danger error-msg" id="password1_error" style="display: none;">Minimum 6 characters required</div>
+          <input type="password" class="form-control" name="password1" id="password1" placeholder="Create a password">
+          <div class="text-danger error-msg" id="password1_error" style="display: none;">Minimum 6 characters required
+          </div>
           {% if form.errors.password1 %}
           <div class="text-danger">{{ form.errors.password1.0 }}</div>
           {% endif %}
@@ -81,7 +85,8 @@
         <!-- Confirm Password -->
         <div class="mb-3">
           <label class="form-label">Confirm Password</label>
-          <input type="password" class="form-control" name="password2" id="password2">
+          <input type="password" class="form-control" name="password2" id="password2"
+            placeholder="Re-enter your password">
           <div class="text-danger error-msg" id="password2_error" style="display: none;">Passwords do not match</div>
           {% if form.errors.password2 %}
           <div class="text-danger">{{ form.errors.password2.0 }}</div>
@@ -98,4 +103,5 @@
 
   <script src="{% static 'js/signup.js' %}"></script>
 </body>
+
 </html>

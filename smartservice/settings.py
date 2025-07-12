@@ -2,9 +2,15 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 
-load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Load ENV_MODE from main .env
+load_dotenv(BASE_DIR / '.env')  # loads ENV_MODE
+env_mode = os.getenv('ENV_MODE', 'dev')
+
+# Load specific env file (e.g., .env.dev or .env.prod)
+load_dotenv(BASE_DIR / f'.env.{env_mode}', override=True)
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = os.getenv("DEBUG", "True") == "True"
@@ -62,16 +68,42 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'smartservice.wsgi.application'
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.getenv('DB_NAME'),
-        'USER': os.getenv('DB_USER'),
-        'PASSWORD': os.getenv('DB_PASSWORD'),
-        'HOST': os.getenv('DB_HOST', 'localhost'),
-        'PORT': os.getenv('DB_PORT', '3306'),
+# Conditional DB settings
+# Select engine dynamically from .env
+db_engine = os.getenv("DB_ENGINE", "mysql")
+
+if db_engine == "postgresql":
+    db_backend = 'django.db.backends.postgresql'
+else:
+    db_backend = 'django.db.backends.mysql'
+
+if db_engine == "mysql":
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': os.getenv('DB_NAME'),
+            'USER': os.getenv('DB_USER'),
+            'PASSWORD': os.getenv('DB_PASSWORD'),
+            'HOST': os.getenv('DB_HOST', 'localhost'),
+            'PORT': os.getenv('DB_PORT', '3306'),
+        }
     }
-}
+elif db_engine == "postgresql":
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.getenv('DB_NAME'),
+            'USER': os.getenv('DB_USER'),
+            'PASSWORD': os.getenv('DB_PASSWORD'),
+            'HOST': os.getenv('DB_HOST'),
+            'PORT': os.getenv('DB_PORT', '5432'),
+            'OPTIONS': {
+                'options': f"-c search_path={os.getenv('DB_SCHEMA', 'smart_service_db')}",
+            }
+        }
+    }
+else:
+    raise Exception("Unsupported DB_ENGINE in environment config.")
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},

@@ -4,8 +4,7 @@ from .forms import SignupForm
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
-
-
+from django.http import JsonResponse
 
 def signup_view(request):
     if request.method == 'POST':
@@ -72,4 +71,7 @@ def dashboard_redirect(request):
 def logout_view(request):
     logout(request)
     return redirect('login')
+
+def ping_view():
+    return JsonResponse({'status': 'ok'})
 

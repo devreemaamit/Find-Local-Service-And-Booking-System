@@ -14,6 +14,7 @@ source venv/bin/activate
 pip install Django
 pip install mysqlclient
 pip install python-dotenv
+pip install requests
 
 ✅ 4. Set Up .env File (If Required)
 SECRET_KEY=your-django-secret-key

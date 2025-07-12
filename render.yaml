@@ -1,0 +1,30 @@
+services:
+  - type: web
+    name: smartservice-django
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: |
+      python manage.py migrate &&
+      python manage.py create_admin &&
+      gunicorn smartservice.wsgi:application
+    envVars:
+      - key: ENV_MODE
+        value: prod
+      - key: DEBUG
+        value: False
+      - key: SECRET_KEY
+        value: (s!)e@_d+@h(g-xko0t075v6r(0fse0ydo+budsb56u3k9lp*b
+      - key: DB_ENGINE
+        value: postgresql
+      - key: DB_NAME
+        value: loan-app
+      - key: DB_USER
+        value: neondb_owner
+      - key: DB_PASSWORD
+        value: npg_GochrIRy90kP
+      - key: DB_HOST
+        value: ep-gentle-resonance-a5ai7831.us-east-2.aws.neon.tech
+      - key: DB_PORT
+        value: 5432
+      - key: DB_SCHEMA
+        value: smart_service_db

@@ -30,8 +30,8 @@ This will create files like:
 2. smartservice/settings.py
 
 🔹 Step 7: Run the Development Server
+python manage.py runserver
 	
-
 Open browser → Visit: http://127.0.0.1:8000
 ✅ If you see “The install worked successfully!” → Django is working.
 

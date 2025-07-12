@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from django.http import HttpResponse
 
 urlpatterns = [
     path('login/', views.login_view, name='login'),
@@ -10,4 +11,6 @@ urlpatterns = [
     path('provider/home/', views.provider_home, name='provider_home'),
 
     path('', views.dashboard_redirect, name='dashboard'), 
+    path("ping/", lambda request: HttpResponse("pong")),
+
 ]
