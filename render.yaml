@@ -10,8 +10,6 @@ services:
       python manage.py create_admin &&
       gunicorn smartservice.wsgi:application
     envVars:
-      - key: ENV_MODE
-        value: prod
       - key: DEBUG
         value: False
       - key: SECRET_KEY
