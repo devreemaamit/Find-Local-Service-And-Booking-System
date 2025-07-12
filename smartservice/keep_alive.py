@@ -1,8 +1,8 @@
 import requests
 import time
 
-# URL = "https://your-app.onrender.com/ping/"  # Replace with your actual Render URL
-URL = "https://loan-app-wjbq.onrender.com/api/server/start"
+URL = "https://find-local-service-and-booking-system.onrender.com/ping"  # Replace with your actual Render URL
+# URL = "https://loan-app-wjbq.onrender.com/api/server/start"
 def ping_server():
     try:
         response = requests.get(URL, timeout=5)

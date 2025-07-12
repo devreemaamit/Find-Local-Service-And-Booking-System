@@ -11,4 +11,7 @@ jobs:
     steps:
       - name: Curl to keep alive
         run: |
-          curl https://loan-app-wjbq.onrender.com/api/server/start
+          curl https://find-local-service-and-booking-system.onrender.com/ping
+
+
+# https://loan-app-wjbq.onrender.com/api/server/start

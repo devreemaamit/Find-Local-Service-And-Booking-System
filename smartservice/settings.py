@@ -15,7 +15,12 @@ load_dotenv(BASE_DIR / f'.env.{env_mode}', override=True)
 SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = os.getenv("DEBUG", "True") == "True"
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    'localhost',
+    'find-local-service-and-booking-system.onrender.com'
+]
+
 
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
