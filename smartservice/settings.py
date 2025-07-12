@@ -4,14 +4,13 @@ from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Load main .env
-load_dotenv(BASE_DIR / '.env')
-env_mode = os.getenv('ENV_MODE', 'dev')
-
-# Load specific .env.dev or .env.prod file only locally
-if os.getenv('RENDER') != 'true':
+# Only load .env if not on Render
+if os.getenv("RENDER") != "true":
+    load_dotenv(BASE_DIR / '.env')
+    env_mode = os.getenv('ENV_MODE', 'dev')
     load_dotenv(BASE_DIR / f'.env.{env_mode}', override=True)
 
+# Now safe to use these:
 SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = os.getenv("DEBUG", "True") == "True"
 
@@ -73,13 +72,13 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'smartservice.wsgi.application'
 
-# ✅ FIXED: Choose DB based on environment
+# FIXED: Choose DB based on environment
 if os.getenv("RENDER") == "true":
     db_engine = "postgresql"
 else:
     db_engine = os.getenv("DB_ENGINE", "mysql")
 
-# ✅ Database config
+# Database config
 if db_engine == "mysql":
     DATABASES = {
         'default': {
