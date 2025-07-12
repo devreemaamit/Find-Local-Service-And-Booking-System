@@ -10,12 +10,17 @@ def signup_view(request):
     if request.method == 'POST':
         form = SignupForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('login')
+            user = form.save()
+            login(request, user) 
+            if user.role == 'provider':
+                return redirect('provider_home')
+            elif user.role == 'user':
+                return redirect('user_home')
+            else:
+                return redirect('login') 
     else:
         form = SignupForm()
     return render(request, 'signup.html', {'form': form})
-
 
 def login_view(request):
     if request.method == 'POST':
