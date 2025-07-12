@@ -12,6 +12,9 @@ env_mode = os.getenv('ENV_MODE', 'dev')
 # Load specific env file (e.g., .env.dev or .env.prod)
 load_dotenv(BASE_DIR / f'.env.{env_mode}', override=True)
 
+if os.getenv('RENDER') != 'true':
+    load_dotenv(BASE_DIR / '.env')
+
 SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = os.getenv("DEBUG", "True") == "True"
 

@@ -32,4 +32,6 @@ services:
         value: smart_service_db
       - key: ALLOWED_HOSTS
         value: find-local-service-and-booking-system.onrender.com
+      - key: RENDER
+        value: true
 
