@@ -79,25 +79,15 @@ else:
     db_engine = os.getenv("DB_ENGINE", "mysql")
 
 # Database config
-if db_engine == "mysql":
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': os.getenv('DB_NAME'),
-            'USER': os.getenv('DB_USER'),
-            'PASSWORD': os.getenv('DB_PASSWORD'),
-            'HOST': os.getenv('DB_HOST', 'localhost'),
-            'PORT': os.getenv('DB_PORT', '3306'),
-        }
-    }
-elif db_engine == "postgresql":
+if os.getenv("RENDER") == "true":
+    # Render uses environment variables, no .env needed
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
             'NAME': os.getenv('DB_NAME'),
             'USER': os.getenv('DB_USER'),
             'PASSWORD': os.getenv('DB_PASSWORD'),
-            'HOST': os.getenv('DB_HOST'),
+            'HOST': os.getenv('DB_HOST'),  # Must not be None or empty
             'PORT': os.getenv('DB_PORT', '5432'),
             'OPTIONS': {
                 'options': f"-c search_path={os.getenv('DB_SCHEMA', 'smart_service_db')}",
@@ -105,7 +95,33 @@ elif db_engine == "postgresql":
         }
     }
 else:
-    raise Exception("Unsupported DB_ENGINE in environment config.")
+    # Local (MySQL or Postgres based on your dev setup)
+    db_engine = os.getenv("DB_ENGINE", "mysql")
+    if db_engine == "mysql":
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.mysql',
+                'NAME': os.getenv('DB_NAME'),
+                'USER': os.getenv('DB_USER'),
+                'PASSWORD': os.getenv('DB_PASSWORD'),
+                'HOST': os.getenv('DB_HOST', 'localhost'),
+                'PORT': os.getenv('DB_PORT', '3306'),
+            }
+        }
+    elif db_engine == "postgresql":
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.postgresql',
+                'NAME': os.getenv('DB_NAME'),
+                'USER': os.getenv('DB_USER'),
+                'PASSWORD': os.getenv('DB_PASSWORD'),
+                'HOST': os.getenv('DB_HOST', 'localhost'),
+                'PORT': os.getenv('DB_PORT', '5432'),
+                'OPTIONS': {
+                    'options': f"-c search_path={os.getenv('DB_SCHEMA', 'smart_service_db')}",
+                }
+            }
+        }
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
@@ -127,7 +143,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
 # Debug info (optional)
-print("Running on Render:", os.getenv('RENDER'))
 print("Using DB Engine:", db_engine)
 print("SECRET_KEY from env:", SECRET_KEY)
+print("DB_HOST:", os.getenv("DB_HOST"))
+print("DB_USER:", os.getenv("DB_USER"))
+print("DB_PASSWORD:", os.getenv("DB_PASSWORD"))
+print("DB_NAME:", os.getenv("DB_NAME"))
+print("RENDER:", os.getenv("RENDER"))
+
 
