@@ -15,7 +15,7 @@ services:
       - key: DEBUG
         value: False
       - key: SECRET_KEY
-        value: (s!)e@_d+@h(g-xko0t075v6r(0fse0ydo+budsb56u3k9lp*b
+        value: s!e@_d+@h(g-xko0t075v6r(0fse0ydo+budsb56u3k9lp*b
       - key: DB_ENGINE
         value: postgresql
       - key: DB_NAME

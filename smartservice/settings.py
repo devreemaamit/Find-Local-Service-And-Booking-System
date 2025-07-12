@@ -130,3 +130,5 @@ AUTH_USER_MODEL = 'accounts.CustomUser'
 # Debug info (optional)
 print("Running on Render:", os.getenv('RENDER'))
 print("Using DB Engine:", db_engine)
+print("SECRET_KEY from env:", SECRET_KEY)
+
