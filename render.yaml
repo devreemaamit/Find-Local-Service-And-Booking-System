@@ -30,3 +30,6 @@ services:
         value: 5432
       - key: DB_SCHEMA
         value: smart_service_db
+      - key: ALLOWED_HOSTS
+        value: find-local-service-and-booking-system.onrender.com
+
