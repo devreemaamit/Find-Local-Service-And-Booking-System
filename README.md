@@ -16,6 +16,8 @@ pip install mysqlclient
 pip install python-dotenv
 pip install requests
 pip install whitenoise
+pip install fastapi uvicorn apscheduler requests
+pip install apscheduler
 
 ✅ 4. Set Up .env File (If Required)
 SECRET_KEY=your-django-secret-key
