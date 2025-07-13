@@ -9,6 +9,7 @@ class LoginRequiredMiddleware:
             reverse('signup'),
             '/admin/login/',  # allow Django admin login
             '/static/',       # allow static files
+            '/api/serverup'
         ]
 
     def __call__(self, request):

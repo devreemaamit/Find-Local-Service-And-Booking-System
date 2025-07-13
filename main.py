@@ -1,29 +1,30 @@
+from fastapi import FastAPI
 from apscheduler.schedulers.background import BackgroundScheduler
-from dotenv import load_dotenv
 import requests
-import atexit
-import os
+import datetime
 
-load_dotenv()  # Load .env variables
+app = FastAPI()
 
-# Replace with your actual Render service URL
-PING_URL = os.getenv("PING_URL", "https://find-local-service-and-booking-system.onrender.com/")
+# 🔁 Dummy API endpoint
+@app.get("/api/serverup")
+def hello():
+    return {"message": "Hello from Smart Service!", "time": str(datetime.datetime.now())}
 
-def ping_render():
+# 🌐 Function to ping Render server
+def ping_render_server():
     try:
-        response = requests.get(PING_URL)
-        print(f"Pinged Render: {response.status_code}")
+        # Replace with your actual Render service URL
+        url = "https://find-local-service-and-booking-system.onrender.com/api/serverup"
+        response = requests.get(url)
+        print(f"[{datetime.datetime.now()}] Pinged Render. Status: {response.status_code}")
     except Exception as e:
-        print(f"Ping failed: {e}")
+        print(f"❌ Error pinging Render: {e}")
 
+# 🕒 Scheduler that runs every 5 minutes
 scheduler = BackgroundScheduler()
-scheduler.add_job(ping_render, 'interval', minutes=5)
+scheduler.add_job(ping_render_server, 'interval', minutes=1)
 scheduler.start()
 
+# ⚠ Make sure scheduler shuts down with app
+# import atexit
 # atexit.register(lambda: scheduler.shutdown())
-
-# Prevent script from exiting immediately if run standalone
-if __name__ == "__main__":
-    import time
-    while True:
-        time.sleep(60)
