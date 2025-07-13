@@ -10,4 +10,6 @@ urlpatterns = [
     path('list', views.provider_services, name='provider_services'),
     path('add', views.add_service, name='add_service'),
     path('my-bookings/', views.view_bookings, name='view_bookings'),
+    path('api/serverup', views.server_up, name='serverup'),
+
 ]

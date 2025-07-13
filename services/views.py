@@ -7,6 +7,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponseForbidden
 from django.contrib.auth.decorators import login_required
 from .models import ServiceCategory
+from django.http import JsonResponse
 
 @login_required
 def create_or_edit_category(request, pk=None):
@@ -83,3 +84,6 @@ def view_bookings(request):
     # In real projects, you'd fetch bookings related to this user
     bookings = []  # placeholder for future logic
     return render(request, 'bookings/view_bookings.html', {'bookings': bookings})
+
+def server_up():
+    return JsonResponse({"message": "Hello from Django Smart Service!"})

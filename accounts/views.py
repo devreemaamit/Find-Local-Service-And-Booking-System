@@ -76,7 +76,3 @@ def dashboard_redirect(request):
 def logout_view(request):
     logout(request)
     return redirect('login')
-
-def ping_view():
-    return JsonResponse({'status': 'ok'})
-
