@@ -8,6 +8,7 @@ from django.http import HttpResponseForbidden
 from django.contrib.auth.decorators import login_required
 from .models import ServiceCategory
 from django.http import JsonResponse
+import datetime
 
 @login_required
 def create_or_edit_category(request, pk=None):
@@ -85,5 +86,5 @@ def view_bookings(request):
     bookings = []  # placeholder for future logic
     return render(request, 'bookings/view_bookings.html', {'bookings': bookings})
 
-def server_up():
-    return JsonResponse({"message": "Hello from Django Smart Service!"})
+def server_up(request):
+    return JsonResponse({"message": "Hello from Django Smart Service!","time": str(datetime.datetime.now())})

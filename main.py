@@ -1,14 +1,6 @@
-from fastapi import FastAPI
 from apscheduler.schedulers.background import BackgroundScheduler
 import requests
 import datetime
-
-app = FastAPI()
-
-# 🔁 Dummy API endpoint
-@app.get("/api/serverup")
-def hello():
-    return {"message": "Hello from Smart Service!", "time": str(datetime.datetime.now())}
 
 # 🌐 Function to ping Render server
 def ping_render_server():

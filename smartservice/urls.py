@@ -1,5 +1,4 @@
 from django.urls import path, include
-from accounts.views import ping_view
 from services.views import server_up
 
 urlpatterns = [

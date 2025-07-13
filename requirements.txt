@@ -6,4 +6,9 @@ python-dotenv==1.0.1
 requests==2.31.0
 whitenoise>=6.6.0
 apscheduler==3.10.4
+fastapi
+uvicorn
+apscheduler
+requests
+
 
