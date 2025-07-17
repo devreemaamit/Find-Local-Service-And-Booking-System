@@ -6,9 +6,9 @@ from accounts.decorators import provider_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponseForbidden
 from django.contrib.auth.decorators import login_required
-from .models import ServiceCategory
 from django.http import JsonResponse
 import datetime
+
 
 @login_required
 def create_or_edit_category(request, pk=None):
@@ -58,27 +58,49 @@ def provider_services(request):
     return render(request, 'services/provider_services.html', {'services': services})
 
 
-# Provider Adds New Service
+# Provider Adds and edit Services
 @provider_required
-def add_service(request):
+def create_or_edit_service(request, pk=None):
     categories = ServiceCategory.objects.all()
+    service = get_object_or_404(ProviderService, pk=pk, provider=request.user) if pk else None
 
     if request.method == 'POST':
-        service_name = request.POST['service_name']
-        category_id = request.POST['category']
-        price = request.POST['price']
-        description = request.POST['description']
+        service_name = request.POST.get('service_name')
+        category_id = request.POST.get('category')
+        price = request.POST.get('price')
+        description = request.POST.get('description')
 
-        ProviderService.objects.create(
-            provider=request.user,
-            category_id=category_id,
-            service_name=service_name,
-            price=price,
-            description=description
-        )
+        if service:
+            service.service_name = service_name
+            service.category_id = category_id
+            service.price = price
+            service.description = description
+            service.save()
+        else:
+            ProviderService.objects.create(
+                provider=request.user,
+                service_name=service_name,
+                category_id=category_id,
+                price=price,
+                description=description
+            )
+
         return redirect('provider_services')
 
-    return render(request, 'services/add_service.html', {'categories': categories})
+    return render(request, 'services/add_service.html', {
+        'service': service,
+        'categories': categories,
+        'is_edit': pk is not None
+    })
+
+@login_required
+def delete_service(request, pk):
+    if request.user.role != 'provider':
+        return HttpResponseForbidden("Only the service provider can delete this service.")
+    service = get_object_or_404(ProviderService, pk=pk)
+    service.delete()
+    return redirect('provider_services')
+
 
 @login_required
 def view_bookings(request):

@@ -19,6 +19,10 @@ pip install whitenoise
 pip install fastapi uvicorn apscheduler requests
 pip install apscheduler
 
+Install individual or
+pip install -r requirements.txt
+
+
 ✅ 4. Set Up .env File (If Required)
 SECRET_KEY=your-django-secret-key
 DB_NAME=smart_service_db
@@ -42,6 +46,9 @@ python manage.py migrate
 
 ✅ 7. Create Admin User
 python manage.py createsuperuser
+
+Default admin create command
+python3 manage.py create_admin
 
 You'll be asked to enter:
 Username

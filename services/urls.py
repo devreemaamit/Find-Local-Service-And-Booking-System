@@ -7,8 +7,11 @@ urlpatterns = [
     path('admin/edit-category/<int:pk>/', views.create_or_edit_category, name='edit_category'),
     path('admin/delete-category/<int:pk>/', views.delete_category, name='delete_category'),
 
+    path('add', views.create_or_edit_service, name='add_service'),
+    path('edit/<int:pk>', views.create_or_edit_service, name='edit_service'),
+    path('delete-service/<int:pk>', views.delete_service, name='delete_service'),
     path('list', views.provider_services, name='provider_services'),
-    path('add', views.add_service, name='add_service'),
+    
     path('my-bookings/', views.view_bookings, name='view_bookings'),
     path('api/serverup', views.server_up, name='serverup'),
 

@@ -76,11 +76,11 @@
 
 <body>
 
-  <!-- 🌐 Navigation Bar -->
+  <!-- Navigation Bar -->
   <nav class="navbar navbar-expand-lg navbar-dark shadow sticky-top">
     <div class="container-fluid">
 
-      <!-- ✅ Logo / Brand -->
+      <!-- Logo / Brand -->
       <a class="navbar-brand d-flex align-items-center gap-2" href="{% if user.is_authenticated %}
           {% url user.role|add:'_home' %}
         {% else %}
@@ -90,19 +90,19 @@
         Smart Service
       </a>
 
-      <!-- 🔽 Mobile Toggler -->
+      <!-- Mobile Toggler -->
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
         aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
 
-      <!-- ✅ Collapsible Menu -->
+      <!-- Collapsible Menu -->
       <div class="collapse navbar-collapse" id="mainNavbar">
         <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center gap-2">
 
           {% if user.is_authenticated %}
 
-          <!-- 🌟 Home Link -->
+          <!-- Home Link -->
           <li class="nav-item">
             <a class="nav-link" href="{% url user.role|add:'_home' %}">
               🏠 {{ user.role|title }} Dashboard
@@ -124,17 +124,17 @@
           </li>
           {% endif %}
 
-          <!-- 🔓 Logout -->
+          <!-- Logout -->
           <li class="nav-item">
             <a class="nav-link btn-nav" href="{% url 'logout' %}">🚪 Logout</a>
           </li>
 
           {% else %}
-          <!-- 🔐 Login -->
+          <!-- Login -->
           <li class="nav-item">
             <a class="nav-link btn-nav" href="{% url 'login' %}">🔐 Login</a>
           </li>
-          <!-- 📝 Signup -->
+          <!-- Signup -->
           <li class="nav-item">
             <a class="nav-link btn-nav" href="{% url 'signup' %}">📝 Signup</a>
           </li>
@@ -145,12 +145,12 @@
     </div>
   </nav>
 
-  <!-- 📄 Main Page Content -->
+  <!-- Main Page Content -->
   <main class="container mt-4">
     {% block content %}{% endblock %}
   </main>
 
-  <!-- 🌟 Enhanced Footer -->
+  <!-- Enhanced Footer -->
   <footer class="bg-gradient-to-r from-primary to-info text-light pt-5 pb-3 mt-5"
     style="background: linear-gradient(90deg, #003d99, #007bff);">
     <div class="container">
@@ -168,7 +168,7 @@
           </p>
         </div>
 
-        <!-- 🔹 Quick Links -->
+        <!-- Quick Links -->
         <div class="col-md-4 mb-4">
           <h6 class="text-uppercase fw-semibold mb-3">Quick Links</h6>
           <ul class="list-unstyled">
@@ -183,7 +183,7 @@
           </ul>
         </div>
 
-        <!-- 🔹 Contact / Social -->
+        <!-- Contact / Social -->
         <div class="col-md-4 mb-4">
           <h6 class="text-uppercase fw-semibold mb-3">Get in Touch</h6>
           <p class="small mb-2"><i class="bi bi-envelope-fill me-2"></i> chauhanreemaamit@gmail.com</p>

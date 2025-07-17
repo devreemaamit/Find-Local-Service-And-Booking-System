@@ -35,9 +35,13 @@ python manage.py runserver
 Open browser → Visit: http://127.0.0.1:8000
 ✅ If you see “The install worked successfully!” → Django is working.
 
+python manage.py createsuperuser
 Username (leave blank to use 'sushe'): admin
 Email address: admin@gmail.com
 Password: admin
+
+Default admin create command
+python3 manage.py create_admin
 
 Folder structure:
 smart_service_system/           ← Your main project folder
