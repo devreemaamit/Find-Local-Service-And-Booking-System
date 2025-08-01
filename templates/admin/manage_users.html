@@ -1,0 +1,212 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <div class="card shadow rounded-4">
+        <div class="card-header bg-primary text-white rounded-top-4">
+            <h4 class="mb-0">Manage Users & Providers</h4>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>#</th>
+                            <th>Username</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>
+                              <i class="bi bi-person-circle text-primary me-1"></i>
+                              {{ user.username }}
+                              <button type="button" class="btn btn-sm btn-outline-secondary ms-2"
+                                    title="View Details"
+                                    onclick="showUserDetailModal(
+                                        '{{ user.username|escapejs }}',
+                                        '{{ user.full_name|default:user.get_full_name|escapejs }}',
+                                        '{{ user.email|escapejs }}',
+                                        '{{ user.role|escapejs }}',
+                                        '{{ user.contact_number }}',
+                                        '{{ user.address }}',
+                                        '{{ user.date_joined }}',
+                                        '{{ user.last_login }}',
+                                        '{{ user.is_active }}',
+                                        '{{ user.is_approved }}'
+                                    )">
+                              <i class="bi bi-eye"></i>
+                            </button>
+
+                            </td>
+                            <td>
+                                {% if user.role == 'provider' %}
+                                    <span class="badge bg-info text-dark">Provider</span>
+                                {% elif user.role == 'admin' %}
+                                    <span class="badge bg-primary">Admin</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">User</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if user.role == 'provider' %}
+                                    {% if user.is_approved %}
+                                        <span class="badge bg-success">Approved</span>
+                                    {% else %}
+                                        <span class="badge bg-warning text-dark">Not Approved</span>
+                                    {% endif %}
+                                {% else %}
+                                    <span class="badge bg-secondary">N/A</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-center">
+                                <div class="d-flex flex-wrap justify-content-center gap-2">
+                                    {% if user.role == 'provider' and not user.is_approved %}
+                                    <button class="btn btn-success btn-sm" onclick="confirmApprove('{{ user.id }}', '{{ user.username }}')">
+                                        <i class="fa fa-check"></i> <span class="d-none d-md-inline">Approve</span>
+                                    </button>
+                                    {% endif %}
+                                    {% if request.user.id != user.id %}
+                                    <button class="btn btn-danger btn-sm" onclick="confirmDelete('{{ user.id }}', '{{ user.username }}')">
+                                        <i class="fa fa-trash"></i> <span class="d-none d-md-inline">Delete</span>
+                                    </button>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center text-muted">No users found.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- User Detail Modal -->
+<div class="modal fade" id="userDetailModal" tabindex="-1" aria-labelledby="userDetailModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content shadow">
+      <div class="modal-header bg-info text-white">
+        <h5 class="modal-title" id="userDetailModalLabel">User Details</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <dl class="row">
+          <dt class="col-sm-4">Username</dt>
+          <dd class="col-sm-8" id="detailUsername"></dd>
+
+          <dt class="col-sm-4">Full Name</dt>
+          <dd class="col-sm-8" id="detailFullName"></dd>
+
+          <dt class="col-sm-4">Email</dt>
+          <dd class="col-sm-8" id="detailEmail"></dd>
+
+          <dt class="col-sm-4">Role</dt>
+          <dd class="col-sm-8" id="detailRole"></dd>
+
+          <dt class="col-sm-4">Contact Number</dt>
+          <dd class="col-sm-8" id="detailContact"></dd>
+
+          <dt class="col-sm-4">Address</dt>
+          <dd class="col-sm-8" id="detailAddress"></dd>
+
+          <dt class="col-sm-4">Date Joined</dt>
+          <dd class="col-sm-8" id="detailJoined"></dd>
+
+          <dt class="col-sm-4">Last Login</dt>
+          <dd class="col-sm-8" id="detailLastLogin"></dd>
+
+          <dt class="col-sm-4">Active</dt>
+          <dd class="col-sm-8" id="detailIsActive"></dd>
+
+          <dt class="col-sm-4">Approved</dt>
+          <dd class="col-sm-8" id="detailIsApproved"></dd>
+        </dl>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- approve Modal -->
+<div class="modal fade" id="approveModal" tabindex="-1" aria-labelledby="approveModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content shadow">
+      <div class="modal-header bg-success text-white">
+        <h5 class="modal-title" id="approveModalLabel">Confirm Verification</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to approve <span id="approveUserName" class="fw-bold"></span> as a provider?
+      </div>
+      <div class="modal-footer">
+        <form id="approveForm" method="post">
+          {% csrf_token %}
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-success">Yes, Approve</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content shadow">
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to delete user <span id="deleteUserName" class="fw-bold"></span>?
+      </div>
+      <div class="modal-footer">
+        <form id="deleteForm" method="post">
+          {% csrf_token %}
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-danger">Yes, Delete</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function confirmApprove(userId, username) {
+    document.getElementById('approveUserName').textContent = username;
+    document.getElementById('approveForm').action = "{% url 'approve_provider' 0 %}".replace('0', userId);
+    var approveModal = new bootstrap.Modal(document.getElementById('approveModal'));
+    approveModal.show();
+}
+function confirmDelete(userId, username) {
+    document.getElementById('deleteUserName').textContent = username;
+    document.getElementById('deleteForm').action = "{% url 'delete_user' 0 %}".replace('0', userId);
+    var deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
+    deleteModal.show();
+}
+
+function showUserDetailModal(username, fullName, email, role, contact, address, joined, login, isActive, isApproved) {
+    document.getElementById('detailUsername').textContent = username;
+    document.getElementById('detailFullName').textContent = fullName;
+    document.getElementById('detailEmail').textContent = email;
+    document.getElementById('detailRole').textContent = role.charAt(0).toUpperCase() + role.slice(1);
+    document.getElementById('detailContact').textContent = contact || 'N/A';
+    document.getElementById('detailAddress').textContent = address || 'N/A';
+    document.getElementById('detailJoined').textContent = joined || 'N/A';
+    document.getElementById('detailLastLogin').textContent = login || 'N/A';
+    document.getElementById('detailIsActive').textContent = isActive === "True" ? 'Yes' : 'No';
+    document.getElementById('detailIsApproved').textContent = isApproved === "True" ? 'Yes' : 'No';
+    new bootstrap.Modal(document.getElementById('userDetailModal')).show();
+}
+</script>
+{% endblock %}

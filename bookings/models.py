@@ -8,6 +8,7 @@ class Booking(models.Model):
     date = models.DateField()
     time = models.TimeField()
     address = models.TextField()
+    is_active = models.BooleanField(default=True)
     status = models.CharField(max_length=20, choices=[
         ('pending', 'Pending'),
         ('confirmed', 'Confirmed'),

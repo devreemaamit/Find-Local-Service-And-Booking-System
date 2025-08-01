@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+  <div class="card shadow-lg p-4 rounded-4 w-100" style="max-width: 500px;">
+    <div class="text-center mb-3">
+      <img src="{% static 'images/profile-edit.jpg' %}" alt="Edit Icon" style="width: 60px;">
+      <h4 class="mt-2">Edit Your Profile</h4>
+      <p class="text-muted small">Update your details below</p>
+    </div>
+
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-success" id="success-alert">
+      {{ message }}
+    </div>
+    {% if redirect_url %}
+    <script>
+      setTimeout(function () {
+        window.location.href = "{{ redirect_url }}";
+      }, 5000);  // Redirect after 5 seconds
+    </script>
+    {% endif %}
+    {% endfor %}
+    {% endif %}
+
+    <form method="POST" class="needs-validation" novalidate onsubmit="return showConfirmModal(event)">
+      {% csrf_token %}
+
+      <!-- Full Name -->
+      <div class="mb-3">
+        <label for="full_name" class="form-label">Full Name</label>
+        <input type="text" class="form-control" id="full_name" name="full_name"
+          value="{{ form.full_name.value|default_if_none:'' }}" required>
+        <div class="invalid-feedback">Full name is required.</div>
+      </div>
+
+      <!-- Email -->
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" class="form-control" id="email" name="email"
+          value="{{ form.email.value|default_if_none:'' }}" required>
+        <div class="invalid-feedback">Valid email is required.</div>
+      </div>
+
+      <!-- Contact Number -->
+      <div class="mb-3">
+        <label for="contact_number" class="form-label">Contact Number</label>
+        <input type="text" class="form-control" id="contact_number" name="contact_number" pattern="^[6-9][0-9]{9}$"
+          maxlength="10" value="{{ form.contact_number.value|default_if_none:'' }}" required
+          oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);">
+        <div class="invalid-feedback">Valid 10-digit contact number is required.</div>
+      </div>
+
+      <!-- Address -->
+      <div class="mb-3">
+        <label for="address" class="form-label">Address</label>
+        <textarea class="form-control" id="address" name="address" rows="2"
+          required>{{ form.address.value|default_if_none:'' }}</textarea>
+        <div class="invalid-feedback">Address is required.</div>
+      </div>
+
+      <!-- Password -->
+      <div class="mb-3 position-relative">
+        <label for="password" class="form-label">Password</label>
+        <div class="input-group">
+          <input type="password" class="form-control" id="password" name="password" placeholder="Enter new password"
+            minlength="6">
+          <button type="button" class="btn btn-outline-secondary" tabindex="-1"
+            onclick="togglePassword('password', this)">
+            <span class="fa fa-eye"></span>
+          </button>
+        </div>
+        <div class="form-text">Leave blank if you do not want to change password.</div>
+      </div>
+
+      <button type="submit" class="btn btn-success w-100 mt-2">💾 Update Profile</button>
+    </form>
+  </div>
+</div>
+
+<!-- Confirmation Modal -->
+<div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content shadow-sm">
+      <div class="modal-header bg-success text-white">
+        <h5 class="modal-title" id="confirmModalLabel">Confirm Update</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">Are you sure you want to update your profile?</div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-success" id="confirmSubmit">Yes, Update</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- JS -->
+<script>
+  const form = document.querySelector('.needs-validation');
+  const confirmModal = new bootstrap.Modal(document.getElementById('confirmModal'));
+  const confirmBtn = document.getElementById('confirmSubmit');
+
+  function togglePassword(fieldId, btn) {
+    const input = document.getElementById(fieldId);
+    const icon = btn.querySelector('span');
+    if (input.type === "password") {
+      input.type = "text";
+      icon.classList.remove('fa-eye');
+      icon.classList.add('fa-eye-slash');
+    } else {
+      input.type = "password";
+      icon.classList.remove('fa-eye-slash');
+      icon.classList.add('fa-eye');
+    }
+  }
+
+  function showConfirmModal(event) {
+    if (!form.checkValidity()) {
+      event.preventDefault();
+      event.stopPropagation();
+      form.classList.add('was-validated');
+      return false;
+    }
+
+    const contact = document.getElementById("contact_number");
+    const pattern = /^[6-9][0-9]{9}$/;
+    if (!pattern.test(contact.value)) {
+      contact.classList.add("is-invalid");
+      event.preventDefault();
+      return false;
+    }
+
+    event.preventDefault(); // prevent form submission
+    confirmModal.show();    // show modal
+    return false;
+  }
+
+  confirmBtn.addEventListener("click", () => {
+    confirmModal.hide();
+    form.submit();
+  });
+
+  // Auto-hide alert messages after 5 seconds
+  document.addEventListener("DOMContentLoaded", () => {
+    const alerts = document.querySelectorAll(".alert");
+    alerts.forEach(alert => {
+      setTimeout(() => {
+        alert.classList.remove("show");
+        alert.classList.add("fade");
+        setTimeout(() => alert.remove(), 500);
+      }, 5000);
+    });
+  });
+</script>
+
+{% endblock %}
