@@ -48,7 +48,7 @@ python manage.py migrate
 python manage.py createsuperuser
 
 Default admin create command
-python3 manage.py create_admin
+python manage.py create_admin
 
 You'll be asked to enter:
 Username

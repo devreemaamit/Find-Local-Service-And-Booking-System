@@ -10,8 +10,12 @@ class Command(BaseCommand):
             User.objects.create_superuser(
                 username='admin',
                 email='admin@example.com',
+                password='admin',
+                full_name='Super Admin',
                 role='admin',
-                password='admin123'
+                address='Admin HQ',
+                contact_number='7990596833',
+                is_approved=True
             )
             self.stdout.write(self.style.SUCCESS('✅ Admin user created'))
         else:
