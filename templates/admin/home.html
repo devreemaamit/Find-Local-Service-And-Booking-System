@@ -19,7 +19,7 @@
           </div>
           <h5 class="card-title">Users</h5>
           <p class="card-text text-muted small">Manage all registered users.</p>
-          <a href="#" class="btn btn-outline-primary btn-sm w-100">Manage Users</a>
+          <a href="{% url 'manage_users' %}" class="btn btn-outline-primary btn-sm w-100">Manage Users</a>
         </div>
       </div>
     </div>
@@ -32,8 +32,8 @@
             <i class="bi bi-person-badge-fill text-info fs-1"></i>
           </div>
           <h5 class="card-title">Providers</h5>
-          <p class="card-text text-muted small">Approve or manage service providers.</p>
-          <a href="#" class="btn btn-outline-info btn-sm w-100">Manage Providers</a>
+          <p class="card-text text-muted small">Approve new providers, view, and delete provider services.</p>
+          <a href="{% url 'manage_providers' %}" class="btn btn-outline-info btn-sm w-100">Manage Providers</a>
         </div>
       </div>
     </div>

@@ -9,7 +9,6 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 import datetime
 
-
 @login_required
 def create_or_edit_category(request, pk=None):
     if request.user.role != 'admin':
@@ -39,7 +38,7 @@ def create_or_edit_category(request, pk=None):
 def list_categories(request):
     if request.user.role != 'admin':
         return HttpResponseForbidden("Only admin can view service categories.")
-    categories = ServiceCategory.objects.all()
+    categories = ServiceCategory.objects.filter(is_active=True)
     return render(request, 'admin/list_categories.html', {'categories': categories})
 
 @login_required
@@ -47,14 +46,15 @@ def delete_category(request, pk):
     if request.user.role != 'admin':
         return HttpResponseForbidden("Only admin can delete service categories.")
     category = get_object_or_404(ServiceCategory, pk=pk)
-    category.delete()
+    category.is_active = False
+    category.save()
     return redirect('list_categories')
 
 
 # Provider Views Their Services
 @provider_required
 def provider_services(request):
-    services = ProviderService.objects.filter(provider=request.user)
+    services = ProviderService.objects.filter(provider=request.user, is_active=True)
     return render(request, 'services/provider_services.html', {'services': services})
 
 
@@ -95,11 +95,17 @@ def create_or_edit_service(request, pk=None):
 
 @login_required
 def delete_service(request, pk):
-    if request.user.role != 'provider':
-        return HttpResponseForbidden("Only the service provider can delete this service.")
     service = get_object_or_404(ProviderService, pk=pk)
-    service.delete()
-    return redirect('provider_services')
+    # Allow provider to delete their own service, or admin to delete any service
+    if request.user.role != 'provider' and request.user.role != 'admin':
+        return HttpResponseForbidden("Only the service provider or admin can delete this service.")
+    if request.user.role == 'provider' and service.provider != request.user:
+        return HttpResponseForbidden("Providers can only delete their own services.")
+    service.is_active = False  # Soft delete
+    service.save()
+    # Redirect based on who deleted
+    if request.user.role == 'admin':
+        return redirect('manage_providers')
 
 
 @login_required
@@ -110,3 +116,4 @@ def view_bookings(request):
 
 def server_up(request):
     return JsonResponse({"message": "Hello from Django Smart Service!","time": str(datetime.datetime.now())})
+

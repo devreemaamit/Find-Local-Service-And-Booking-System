@@ -9,3 +9,7 @@ class CustomUser(AbstractUser):
     )
     full_name = models.CharField(max_length=100)
     role = models.CharField(max_length=10, choices=ROLE_CHOICES)
+    address = models.TextField(blank=True, null=True)
+    contact_number = models.CharField(max_length=10, blank=True, null=True)
+    is_active = models.BooleanField(default=True)
+    is_approved = models.BooleanField(default=False)  # Admin approval
