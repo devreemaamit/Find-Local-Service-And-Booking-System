@@ -42,19 +42,43 @@
           <!-- Contact Number -->
           <div class="mb-3">
             <label for="contact_number" class="form-label">Contact Number</label>
-            <input type="tel" class="form-control" id="contact_number" name="contact_number" placeholder="Enter your contact number"
-              value="{{ request.POST.contact_number }}" pattern="^[6-9][0-9]{9}$" maxlength="10" required
-              oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);">
-            <div class="invalid-feedback">Please enter a valid 10-digit contact number starting with 6, 7, 8, or 9.</div>
+            <input type="tel"
+                  class="form-control {% if form.contact_number.errors %}is-invalid{% endif %}"
+                  id="contact_number"
+                  name="contact_number"
+                  placeholder="Enter your contact number"
+                  value="{{ form.contact_number.value|default_if_none:'' }}"
+                  pattern="^[6-9][0-9]{9}$"
+                  maxlength="10"
+                  required
+                  oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);">
+            <div class="invalid-feedback" id="contact-error">
+              {% if form.contact_number.errors %}
+                {{ form.contact_number.errors.0 }}
+              {% else %}
+                Please enter a valid 10-digit contact number starting with 6, 7, 8, or 9.
+              {% endif %}
+            </div>
           </div>
 
-        <!-- Email -->
-        <div class="mb-3">
-          <label for="email" class="form-label">Email Address</label>
-          <input type="email" class="form-control" id="email" name="email" placeholder="you@example.com"
-            value="{{ request.POST.email }}" required>
-          <div class="invalid-feedback">Please enter a valid email.</div>
-        </div>
+          <!-- Email -->
+          <div class="mb-3">
+            <label for="email" class="form-label">Email Address</label>
+            <input type="email"
+                  class="form-control {% if form.email.errors %}is-invalid{% endif %}"
+                  id="email"
+                  name="email"
+                  placeholder="you@example.com"
+                  value="{{ form.email.value|default_if_none:'' }}"
+                  required>
+            <div class="invalid-feedback" id="email-error">
+              {% if form.email.errors %}
+                {{ form.email.errors.0 }}
+              {% else %}
+                Please enter a valid email.
+              {% endif %}
+            </div>
+          </div>
 
         <!-- Username -->
         <div class="mb-3">
@@ -86,13 +110,14 @@
         <div class="mb-3 position-relative">
           <label for="password1" class="form-label">Password</label>
           <div class="input-group">
-            <input type="password" class="form-control" id="password1" name="password1" placeholder="Create a password"
-              minlength="6" required>
+            <input type="password" class="form-control" id="password1" name="password1"
+              placeholder="Create a password" required>
             <button type="button" class="btn btn-outline-secondary" tabindex="-1" onclick="togglePassword('password1', this)">
               <span class="fa fa-eye"></span>
             </button>
           </div>
-          <div class="invalid-feedback">Password must be at least 6 characters long.</div>
+          <div class="invalid-feedback" id="passwordRequired">Password is required.</div>
+          <div class="invalid-feedback" id="passwordTooShort">Password must be at least 6 characters long.</div>
         </div>
 
         <!-- Confirm Password -->
@@ -157,45 +182,59 @@
   }
 
   function showConfirmModal(event) {
-    if (!form.checkValidity()) {
-      event.preventDefault();
-      event.stopPropagation();
-      form.classList.add('was-validated');
-      return false;
-    }
+    event.preventDefault();
+    event.stopPropagation();
 
-    // Contact number validation
+    let valid = true;
+    form.classList.add('was-validated');
+
+    // Contact validation
     const contactInput = document.getElementById("contact_number");
     const contactValue = contactInput.value.trim();
     const contactPattern = /^[6-9][0-9]{9}$/;
 
-    if (contactValue === "") {
+    if (!contactPattern.test(contactValue)) {
       contactInput.classList.add("is-invalid");
-      event.preventDefault();
-      event.stopPropagation();
-      return false;
-    } else if (!contactPattern.test(contactValue)) {
-      contactInput.classList.add("is-invalid");
-      event.preventDefault();
-      event.stopPropagation();
-      return false;
+      valid = false;
     } else {
       contactInput.classList.remove("is-invalid");
     }
 
-    const pass1 = document.getElementById("password1").value;
-    const pass2 = document.getElementById("password2").value;
+    // Password validations
+    const pass1Input = document.getElementById("password1");
+    const pass2Input = document.getElementById("password2");
+    const pass1 = pass1Input.value.trim();
+    const pass2 = pass2Input.value.trim();
 
-    if (pass1 !== pass2) {
-      event.preventDefault();
-      event.stopPropagation();
-      document.getElementById("password2").classList.add("is-invalid");
-      document.getElementById("passwordMismatch").style.display = "block";
-      return false;
+    const passRequired = document.getElementById("passwordRequired");
+    const passTooShort = document.getElementById("passwordTooShort");
+    const passMismatch = document.getElementById("passwordMismatch");
+
+    pass1Input.classList.remove("is-invalid");
+    pass2Input.classList.remove("is-invalid");
+    passRequired.style.display = "none";
+    passTooShort.style.display = "none";
+    passMismatch.style.display = "none";
+
+    if (!pass1) {
+      pass1Input.classList.add("is-invalid");
+      passRequired.style.display = "block";
+      valid = false;
+    } else if (pass1.length < 6) {
+      pass1Input.classList.add("is-invalid");
+      passTooShort.style.display = "block";
+      valid = false;
     }
 
-    event.preventDefault(); // prevent form submission
-    confirmModal.show(); // show confirmation modal
+    if (pass1 !== pass2) {
+      pass2Input.classList.add("is-invalid");
+      passMismatch.style.display = "block";
+      valid = false;
+    }
+
+    if (valid) {
+      confirmModal.show();
+    }
     return false;
   }
 
@@ -204,15 +243,18 @@
     form.submit();
   });
 
-  // Auto-hide alert messages after 5 seconds
+  // Live validation for password fields
   document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById("password1").addEventListener("input", showConfirmModal);
+    document.getElementById("password2").addEventListener("input", showConfirmModal);
+
     const alerts = document.querySelectorAll(".alert");
     alerts.forEach(alert => {
       setTimeout(() => {
         alert.classList.remove("show");
         alert.classList.add("fade");
-        setTimeout(() => alert.remove(), 500); // fully remove from DOM
-      }, 5000); // 5 seconds
+        setTimeout(() => alert.remove(), 500);
+      }, 5000);
     });
   });
 </script>

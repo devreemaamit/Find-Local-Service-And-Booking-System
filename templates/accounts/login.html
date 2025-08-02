@@ -23,20 +23,20 @@
 
       <!-- Show non-field error -->
       {% if form.non_field_errors %}
-        <div class="alert alert-danger alert-dismissible fade show py-2 small" role="alert" id="error-alert">
-          Invalid username or password. Please try again.
-          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
+      <div class="alert alert-danger alert-dismissible fade show py-2 small" role="alert" id="error-alert">
+        Invalid username or password. Please try again.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
       {% endif %}
 
       <!-- Show messages like 'not approved' -->
       {% if messages %}
-        {% for message in messages %}
-          <div class="alert alert-danger alert-dismissible fade show py-2 small" role="alert" id="error-alert">
-            {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-          </div>
-        {% endfor %}
+      {% for message in messages %}
+      <div class="alert alert-danger alert-dismissible fade show py-2 small" role="alert" id="error-alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+      {% endfor %}
       {% endif %}
 
 
@@ -44,22 +44,24 @@
         {% csrf_token %}
 
         <div class="mb-3">
-        <label class="form-label">Username</label>
-        <input type="text" name="username" class="form-control rounded-3" id="username"
-          value="{{ request.POST.username|default_if_none:'' }}" required placeholder="Enter your username">
-        <div class="invalid-feedback">Username is required</div>
-      </div>
-
-      <div class="mb-3">
-        <label class="form-label">Password</label>
-        <div class="input-group">
-          <input type="password" name="password" class="form-control rounded-3" id="password" required placeholder="Enter your password">
-          <button type="button" class="btn btn-outline-secondary" tabindex="-1" onclick="togglePassword('password', this)">
-            <span class="fa fa-eye"></span>
-          </button>
+          <label class="form-label">Username</label>
+          <input type="text" name="username" class="form-control rounded-3" id="username"
+            value="{{ request.POST.username|default_if_none:'' }}" required placeholder="Enter your username">
+          <div class="invalid-feedback" style="display: none;">Username is required</div>
         </div>
-        <div class="invalid-feedback">Password is required</div>
-      </div>
+
+        <div class="mb-3">
+          <label class="form-label">Password</label>
+          <div class="input-group">
+            <input type="password" name="password" class="form-control rounded-3" id="password" required
+              placeholder="Enter your password">
+            <button type="button" class="btn btn-outline-secondary" tabindex="-1"
+              onclick="togglePassword('password', this)">
+              <span class="fa fa-eye"></span>
+            </button>
+          </div>
+          <div class="invalid-feedback" style="display: none;">Password is required</div>
+        </div>
 
         <button type="submit" class="btn btn-primary w-100 rounded-3">🔐 Login</button>
 
@@ -96,7 +98,7 @@
     const loginModal = new bootstrap.Modal(document.getElementById('loginConfirmModal'));
     const confirmLoginBtn = document.getElementById('confirmLoginBtn');
 
-      function togglePassword(fieldId, btn) {
+    function togglePassword(fieldId, btn) {
       const input = document.getElementById(fieldId);
       const icon = btn.querySelector('span');
       if (input.type === "password") {
@@ -134,14 +136,45 @@
 
       serverErrors.forEach(err => {
         if (err.textContent.trim() !== '') {
-            document.getElementById('username').value = '';
-            document.getElementById('password').value = '';
+          document.getElementById('username').value = '';
+          document.getElementById('password').value = '';
           setTimeout(() => {
             err.style.display = 'none';
           }, 5000); // 5 seconds
         }
       });
     });
+
+    // Live validation for username and password
+    document.addEventListener("DOMContentLoaded", function () {
+      const usernameInput = document.getElementById("username");
+      const passwordInput = document.getElementById("password");
+
+      function validateField(input) {
+        let feedback;
+
+        if (input.closest('.input-group')) {
+          feedback = input.closest('.mb-3').querySelector('.invalid-feedback');
+        } else {
+          feedback = input.parentElement.querySelector('.invalid-feedback');
+        }
+
+        if (!input.value.trim()) {
+          input.classList.add("is-invalid");
+          if (feedback) feedback.style.display = 'block';
+        } else {
+          input.classList.remove("is-invalid");
+          if (feedback) feedback.style.display = 'none';
+        }
+      }
+
+      usernameInput.addEventListener("blur", () => validateField(usernameInput));
+      passwordInput.addEventListener("blur", () => validateField(passwordInput));
+
+      usernameInput.addEventListener("input", () => validateField(usernameInput));
+      passwordInput.addEventListener("input", () => validateField(passwordInput));
+    });
+
 
   </script>
 </body>
