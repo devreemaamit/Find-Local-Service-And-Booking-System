@@ -122,6 +122,14 @@ Github account:
 chauhanreemaamit@gmail.com
 *6352217770@Reema
 
+Render Server:
+chauhanreemaamit@gmail.com
+*6352217770@Reema
+
+Neon DB:
+chauhanreemaamit@gmail.com
+*6352217770@Reema
+
 gihub access token :  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
 
 git clone https://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@github.com/devreemaamit/Find-Local-Service-And-Booking-System.git
