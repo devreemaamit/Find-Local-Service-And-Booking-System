@@ -19,7 +19,7 @@
           </div>
           <h5 class="card-title">Book a Service</h5>
           <p class="card-text text-muted small">Find and request services from providers near you.</p>
-          <a href="#" class="btn btn-outline-success btn-sm w-100">Browse Services</a>
+          <a href="{% url 'service_list' %}" class="btn btn-outline-success btn-sm w-100">Browse Services</a>
         </div>
       </div>
     </div>
@@ -33,7 +33,7 @@
           </div>
           <h5 class="card-title">My Bookings</h5>
           <p class="card-text text-muted small">Check the status of your service bookings.</p>
-          <a href="{% url 'view_bookings' %}" class="btn btn-outline-info btn-sm w-100 rounded-pill">
+          <a href="{% url 'user_bookings' %}" class="btn btn-outline-info btn-sm w-100 rounded-pill">
             View Bookings
           </a>
         </div>

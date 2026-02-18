@@ -1,0 +1,168 @@
+{% extends 'base.html' %}
+{% block title %}Book Service{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="text-primary m-0">
+      Book: {{ service.service_name }}
+    </h3>
+
+    <button onclick="history.back()"
+            class="btn btn-outline-secondary btn-sm">
+      ← Back
+    </button>
+  </div>
+
+  <div class="row justify-content-center">
+
+    <div class="col-lg-6">
+
+      <div class="card shadow-sm border-0">
+        <div class="card-body">
+
+          <p class="text-muted">
+            {{ service.description }}
+          </p>
+
+          <p class="fw-bold text-success fs-5">
+            ₹ {{ service.price }}
+          </p>
+
+          <hr>
+
+          <!-- <form method="post">
+            {% csrf_token %}
+
+            <div class="mb-3">
+              <label class="form-label">Select Date</label>
+              {{ form.date }}
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Select Time</label>
+              {{ form.time }}
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Service Address</label>
+              {{ form.address }}
+            </div>
+
+            <div class="d-flex gap-2">
+              <button type="submit"
+                      class="btn btn-success w-100">
+                Confirm Booking
+              </button>
+
+              <button type="button"
+                      onclick="history.back()"
+                      class="btn btn-outline-secondary w-100">
+                Cancel
+              </button>
+            </div>
+
+          </form> -->
+
+          <form method="post" id="bookingForm" novalidate>
+            {% csrf_token %}
+
+            <div class="mb-3">
+              <label class="form-label">
+                Select Date <span class="text-danger">*</span>
+              </label>
+              {{ form.date }}
+              <div class="invalid-feedback">
+                Please select a date.
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">
+                Select Time <span class="text-danger">*</span>
+              </label>
+              {{ form.time }}
+              <div class="invalid-feedback">
+                Please select a time.
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">
+                Service Address <span class="text-danger">*</span>
+              </label>
+              {{ form.address }}
+              <div class="invalid-feedback">
+                Please enter address.
+              </div>
+            </div>
+
+            <div class="d-flex gap-2">
+              <button type="submit" class="btn btn-success w-100">
+                Confirm Booking
+              </button>
+
+              <button type="button"
+                      onclick="history.back()"
+                      class="btn btn-outline-secondary w-100">
+                Cancel
+              </button>
+            </div>
+          </form>
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+  const form = document.getElementById("bookingForm");
+  const inputs = form.querySelectorAll("input, textarea, select");
+
+  // Submit validation
+  form.addEventListener("submit", function(e) {
+
+      let isValid = true;
+
+      inputs.forEach(function(input) {
+
+          if (!input.value.trim()) {
+              input.classList.add("is-invalid");
+              isValid = false;
+          } else {
+              input.classList.remove("is-invalid");
+          }
+
+      });
+
+      if (!isValid) {
+          e.preventDefault();
+      }
+  });
+
+  // Real-time validation remove
+  inputs.forEach(function(input) {
+
+      input.addEventListener("input", function() {
+          if (this.value.trim()) {
+              this.classList.remove("is-invalid");
+          }
+      });
+
+      input.addEventListener("change", function() {
+          if (this.value.trim()) {
+              this.classList.remove("is-invalid");
+          }
+      });
+
+  });
+</script>
+
+
+{% endblock %}

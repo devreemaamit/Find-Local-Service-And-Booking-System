@@ -1,3 +1,4 @@
+from xml.etree.ElementInclude import include
 from django.urls import path
 from . import views
 from django.http import HttpResponse
@@ -17,5 +18,5 @@ urlpatterns = [
     
     path('', views.dashboard_redirect, name='dashboard'),
     path("ping/", lambda request: HttpResponse("pong")),
-
+    path('admin/bookings/', views.admin_all_bookings, name='admin_all_bookings'),
 ]

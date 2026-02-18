@@ -1,6 +1,7 @@
 from pathlib import Path
 import os
 from dotenv import load_dotenv
+from django.contrib.messages import constants as messages
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -154,5 +155,9 @@ print("DB_USER:", os.getenv("DB_USER"))
 print("DB_PASSWORD:", os.getenv("DB_PASSWORD"))
 print("DB_NAME:", os.getenv("DB_NAME"))
 print("RENDER:", os.getenv("RENDER"))
+
+MESSAGE_TAGS = {
+    messages.ERROR: 'danger',
+}
 
 

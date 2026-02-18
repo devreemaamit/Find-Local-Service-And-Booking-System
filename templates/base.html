@@ -146,6 +146,18 @@
     </div>
   </nav>
 
+  <!-- Django Messages Here -->
+  {% if messages %}
+    <div class="position-fixed top-0 start-50 translate-middle-x mt-3" style="z-index:1055; width: 400px;">
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show shadow">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
   <!-- Main Page Content -->
   <main class="container mt-4">
     {% block content %}{% endblock %}
@@ -205,6 +217,20 @@
       </div>
     </div>
   </footer>
+
+  <!-- Auto Hide Django Messages After 5 Seconds -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+      setTimeout(function () {
+        document.querySelectorAll('.alert').forEach(function (alert) {
+          let bsAlert = new bootstrap.Alert(alert);
+          bsAlert.close();
+        });
+      }, 5000); // 5 seconds
+
+    });
+  </script>
 
 
 </body>

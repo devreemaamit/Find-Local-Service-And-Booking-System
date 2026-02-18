@@ -9,6 +9,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from .forms import EditProfileForm
+from bookings.models import Booking
 
 def signup_view(request):
     if request.method == 'POST':
@@ -145,3 +146,23 @@ def edit_profile(request):
     return render(request, 'accounts/edit_profile.html', {
         'form': form
     })
+
+@login_required
+def admin_all_bookings(request):
+
+    # Only admin access allowed
+    if request.user.role != 'admin':
+        return redirect('login')   # ya unauthorized page
+
+    bookings = Booking.objects.select_related(
+        'service',
+        'service__category',
+        'provider',
+        'user'
+    ).order_by('-created_at')
+
+    context = {
+        'bookings': bookings
+    }
+
+    return render(request, 'admin/all_bookings.html', context)

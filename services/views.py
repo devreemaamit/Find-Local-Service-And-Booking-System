@@ -8,6 +8,10 @@ from django.http import HttpResponseForbidden
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 import datetime
+from django.shortcuts import render
+from .models import ProviderService
+from reviews.models import Review
+from django.db.models import Avg, Q
 
 @login_required
 def create_or_edit_category(request, pk=None):
@@ -116,4 +120,54 @@ def view_bookings(request):
 
 def server_up(request):
     return JsonResponse({"message": "Hello from Django Smart Service!","time": str(datetime.datetime.now())})
+
+@login_required
+def service_list(request):
+
+    query = request.GET.get('q')
+
+    services = ProviderService.objects.filter(
+        is_active=True,
+        is_available=True
+    )
+
+    # Proper Search
+    if query:
+        services = services.filter(
+            Q(service_name__icontains=query) |
+            Q(description__icontains=query) |
+            Q(provider__full_name__icontains=query) |
+            Q(provider__contact_number__icontains=query) |
+            Q(provider__address__icontains=query) |
+            Q(category__name__icontains=query)
+        )
+
+    # Average Rating
+    services = services.annotate(
+        avg_rating=Avg('bookings__review__rating')
+    )
+
+    return render(request, 'services/service_list.html', {
+        'services': services
+    })
+
+@login_required
+def service_detail(request, service_id):
+
+    service = get_object_or_404(
+        ProviderService,
+        id=service_id,
+        is_active=True
+    )
+
+    reviews = Review.objects.filter(
+        booking__service=service,
+        is_active=True
+    )
+
+    return render(request, 'services/service_detail.html', {
+        'service': service,
+        'reviews': reviews
+    })
+
 

@@ -14,5 +14,8 @@ urlpatterns = [
     
     path('my-bookings/', views.view_bookings, name='view_bookings'),
     path('api/serverup', views.server_up, name='serverup'),
+    path('', views.service_list, name='service_list'),
+    path('detail/<int:service_id>/',views.service_detail,name='service_detail'),
+
 
 ]

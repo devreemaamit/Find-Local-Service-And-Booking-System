@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% block title %}Write Review{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+
+  <!-- Header Section -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    
+    <h3 class="text-primary m-0">
+      Write Review
+    </h3>
+
+    <button onclick="history.back()"
+            class="btn btn-outline-secondary btn-sm">
+      ← Back
+    </button>
+
+  </div>
+
+  <!-- Review Card -->
+  <div class="card shadow-sm border-0 col-md-6 mx-auto">
+    <div class="card-body">
+
+      <h5 class="mb-3 text-dark">
+        Service: {{ booking.service.service_name }}
+      </h5>
+
+      <form method="post" id="reviewForm" novalidate>
+        {% csrf_token %}
+
+        <!-- Rating -->
+        <div class="mb-3">
+          <label class="form-label">Rating (1-5) <span class="text-danger">*</span></label>
+          {{ form.rating }}
+          <div class="invalid-feedback">
+            Please provide a rating between 1 and 5.
+          </div>
+        </div>
+
+        <!-- Comment -->
+        <div class="mb-3">
+          <label class="form-label">Comment (Optional)</label>
+          {{ form.comment }}
+        </div>
+
+        <button type="submit" class="btn btn-success w-100">
+          Submit Review
+        </button>
+
+      </form>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- Validation Script -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+
+  const form = document.getElementById("reviewForm");
+  const ratingInput = form.querySelector("input[name='rating']");
+  const commentInput = form.querySelector("textarea[name='comment']");
+
+  // Submit Validation
+  form.addEventListener("submit", function(e) {
+
+    let isValid = true;
+    let ratingValue = ratingInput.value.trim();
+
+    if (!ratingValue || ratingValue < 1 || ratingValue > 5) {
+      ratingInput.classList.add("is-invalid");
+      isValid = false;
+    } else {
+      ratingInput.classList.remove("is-invalid");
+    }
+
+    if (!isValid) {
+      e.preventDefault();
+    }
+
+  });
+
+  // Live validation for Rating
+  ratingInput.addEventListener("input", function() {
+
+    let value = this.value.trim();
+
+    if (value >= 1 && value <= 5) {
+      this.classList.remove("is-invalid");
+    }
+
+  });
+
+});
+</script>
+
+{% endblock %}
