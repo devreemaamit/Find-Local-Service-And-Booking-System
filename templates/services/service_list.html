@@ -46,19 +46,38 @@
     <div class="card shadow-sm h-100">
       <div class="card-body">
 
-        <h5 class="card-title">{{ service.service_name }}</h5>
+        <h5 class="card-title text-primary fw-semibold mb-2">
+            {{ service.service_name }}
+        </h5>
 
         <p class="text-muted">
           {{ service.description|truncatewords:15 }}
         </p>
 
-        <p>
-          {% if service.avg_rating %}
-            ⭐ {{ service.avg_rating|floatformat:1 }}
+        <p class="mb-2">
+          {% if service.avg_rating > 0 %}
+
+            {% with rating=service.avg_rating %}
+
+              {% for i in "12345" %}
+                {% if forloop.counter <= rating %}
+                  <i class="fa-solid fa-star text-warning"></i>
+                {% elif forloop.counter|add:"-1" < rating %}
+                  <i class="fa-solid fa-star-half-stroke text-warning"></i>
+                {% else %}
+                  <i class="fa-regular fa-star text-muted"></i>
+                {% endif %}
+              {% endfor %}
+
+              <span class="ms-1">{{ rating }}</span>
+
+            {% endwith %}
+
           {% else %}
-            ⭐ No rating yet
+            <i class="fa-regular fa-star text-muted"></i> No rating yet
           {% endif %}
-        </p>
+          </p>
+
 
         <p class="fw-bold text-success">
           ₹ {{ service.price }}

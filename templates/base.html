@@ -101,28 +101,70 @@
       <div class="collapse navbar-collapse" id="mainNavbar">
         <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center gap-2">
 
-          {% if user.is_authenticated %}
+        {% if user.is_authenticated %}
 
-          <!-- Home Link -->
+          <!-- Dashboard -->
           <li class="nav-item">
             <a class="nav-link" href="{% url user.role|add:'_home' %}">
-              🏠 {{ user.role|title }} Dashboard
+              🏠 Dashboard
             </a>
           </li>
 
-          <!-- 🛠 Provider Specific -->
+          <!-- ================= ADMIN ================= -->
+          {% if user.role == 'admin' %}
+          
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'manage_users' %}">👥 Users</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'manage_providers' %}">🛠 Providers</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'admin_all_bookings' %}">📅 Bookings</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'create_category' %}">➕ Categories</a>
+            </li>
+
+          {% endif %}
+
+
+          <!-- ================= PROVIDER ================= -->
           {% if user.role == 'provider' %}
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'provider_services' %}">🛠 My Services</a>
-          </li>
-          {% elif user.role == 'user' %}
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'view_bookings' %}">📅 My Bookings</a>
-          </li>
-          {% elif user.role == 'admin' %}
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'create_category' %}">➕ Add Category</a>
-          </li>
+          
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'provider_services' %}">🛠 My Services</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'provider_bookings' %}">📅 Bookings</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'edit_profile' %}">⚙ Profile</a>
+            </li>
+
+          {% endif %}
+
+
+          <!-- ================= USER ================= -->
+          {% if user.role == 'user' %}
+          
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'service_list' %}">🛍 Book Service</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'user_bookings' %}">📅 My Bookings</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'edit_profile' %}">⚙ Profile</a>
+            </li>
+
           {% endif %}
 
           <!-- Logout -->
@@ -130,18 +172,20 @@
             <a class="nav-link btn-nav" href="{% url 'logout' %}">🚪 Logout</a>
           </li>
 
-          {% else %}
-          <!-- Login -->
+        {% else %}
+
           <li class="nav-item">
             <a class="nav-link btn-nav" href="{% url 'login' %}">🔐 Login</a>
           </li>
-          <!-- Signup -->
+
           <li class="nav-item">
             <a class="nav-link btn-nav" href="{% url 'signup' %}">📝 Signup</a>
           </li>
-          {% endif %}
+
+        {% endif %}
 
         </ul>
+
       </div>
     </div>
   </nav>

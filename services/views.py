@@ -12,6 +12,8 @@ from django.shortcuts import render
 from .models import ProviderService
 from reviews.models import Review
 from django.db.models import Avg, Q
+from django.db.models.functions import Coalesce
+from django.db.models import Value, FloatField
 
 @login_required
 def create_or_edit_category(request, pk=None):
@@ -131,7 +133,6 @@ def service_list(request):
         is_available=True
     )
 
-    # Proper Search
     if query:
         services = services.filter(
             Q(service_name__icontains=query) |
@@ -144,8 +145,16 @@ def service_list(request):
 
     # Average Rating
     services = services.annotate(
-        avg_rating=Avg('bookings__review__rating')
+        avg_rating=Coalesce(
+            Avg('bookings__review__rating'),
+            Value(0.0),
+            output_field=FloatField()
+        )
     )
+
+    # Round rating (important)
+    for service in services:
+        service.avg_rating = round(service.avg_rating, 1)
 
     return render(request, 'services/service_list.html', {
         'services': services

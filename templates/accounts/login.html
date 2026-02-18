@@ -43,7 +43,7 @@
       <form method="post" class="needs-validation" novalidate onsubmit="return showLoginConfirm(event)">
         {% csrf_token %}
 
-        <div class="mb-3">
+        <!-- <div class="mb-3">
           <label class="form-label">Username</label>
           <input type="text" name="username" class="form-control rounded-3" id="username"
             value="{{ request.POST.username|default_if_none:'' }}" required placeholder="Enter your username">
@@ -61,6 +61,38 @@
             </button>
           </div>
           <div class="invalid-feedback" style="display: none;">Password is required</div>
+        </div> -->
+
+        <div class="mb-3">
+        <label class="form-label">Username</label>
+        <input type="text" name="username" class="form-control rounded-3" id="username"
+          required placeholder="Enter your username">
+        <div class="invalid-feedback">
+          Username is required
+        </div>
+      </div>
+
+      <div class="mb-3">
+          <label class="form-label">Password</label>
+
+          <div class="input-group has-validation">
+            <input type="password" name="password"
+              class="form-control rounded-3"
+              id="password"
+              required
+              placeholder="Enter your password">
+
+            <button type="button"
+              class="btn btn-outline-secondary"
+              tabindex="-1"
+              onclick="togglePassword('password', this)">
+              <span class="fa fa-eye"></span>
+            </button>
+
+            <div class="invalid-feedback">
+              Password is required
+            </div>
+          </div>
         </div>
 
         <button type="submit" class="btn btn-primary w-100 rounded-3">🔐 Login</button>

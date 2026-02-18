@@ -20,9 +20,9 @@
       <div class="card shadow-sm border-0 h-100">
         <div class="card-body">
 
-          <h4 class="text-primary mb-3">
-            {{ service.service_name }}
-          </h4>
+          <h5 class="card-title text-primary fw-semibold mb-2">
+              {{ service.service_name }}
+          </h5>
 
           <p class="text-muted">
             {{ service.description }}
@@ -51,7 +51,16 @@
           {% for review in reviews %}
             <div class="border rounded p-2 mb-3">
               <strong>{{ review.reviewer.full_name }}</strong>
-              <div>⭐ {{ review.rating }}/5</div>
+              <div>
+                {% for i in "12345" %}
+                  {% if forloop.counter <= review.rating %}
+                    <i class="fa-solid fa-star text-warning"></i>
+                  {% else %}
+                    <i class="fa-regular fa-star text-muted"></i>
+                  {% endif %}
+                {% endfor %}
+              </div>
+
               <small class="text-muted">
                 {{ review.created_at|date:"d M Y" }}
               </small>
